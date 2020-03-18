@@ -1,17 +1,20 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.Scanner;
+
 
 public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		Scanner read = new Scanner(System.in);
 		File archivo = null;
 	    FileReader fr = null;
 	    BufferedReader br = null;
-	    String[] words = null,translate = null;
-	 	String word,key = "",value="",line,traducir = "", espaniol = "";
+	    boolean tmenu;
+	    String[] words = null,translate = null,inOrder = null;
+	 	String word,key = "",value="",line,traducir = "", espaniol = "",menu;
 	 	BinarySearchTree dictionary = new BinarySearchTree();
 		
 	    
@@ -28,9 +31,6 @@ public class Main {
 	            	}else if (i%2 == 1) {
 	            		value = words[i].replace(")","").toLowerCase();
 	            	}
-	            	//System.out.println(key +" " + value);
-	            	
-	            	//System.out.println(dictionary.toString());
 	            }
 	            dictionary.add(key, value);
 	        }
@@ -68,25 +68,54 @@ public class Main {
 			    }
 			}
 			
-
-			translate = traducir.split(" ");
-			for(int a = 0; a < translate.length; a++) {
-			try {
-
-					espaniol += " " + dictionary.search(translate[a]) + " ";
-			}catch(Exception e){
-				espaniol += " "+"*"+translate[a]+"*"+" ";
+//-------------------------------Menu
+			
+			System.out.println("------- TRADUCTOR ---------");
+			System.out.println("1. Traduzca una oracion guardada en el archivo texto.txt");
+			System.out.println("2. Ver todas las palabras guardadas en el diccionario mediante un recorrido in-order");
+			System.out.print("Ingrese el numero de la opcion que desee probar: ");
+			menu = read.nextLine();
+			tmenu = MenuInvalido(menu);
+			while (tmenu != false) {
+				System.out.print("Ingrese nuevamente el numero de la opcion que desee: ");	
+				menu = read.nextLine();
+				tmenu = MenuInvalido(menu);
 			}
-			
-			
-		}
-			System.out.println(espaniol);
 
-					
-					
-
-
+			switch(menu){
+			case "1":
+				System.out.println();
+				System.out.println("La oracion a traducir es: "+traducir);
+				translate = traducir.split(" ");
+				for(int a = 0; a < translate.length; a++) {
+					try {
+						espaniol += " " + dictionary.search(translate[a]) + " ";
+					}catch(Exception e){
+					espaniol += " "+"*"+translate[a]+"*"+" ";
+					}
+				}
+				System.out.println("Traduccion:");
+				System.out.println(espaniol);
+				System.out.println("Recuerde que las palabras que no se encuentran dentro del diccionario se muestran con un asteristo");
+			break;
+			case "2":
+				System.out.println();
+				System.out.println("La palabras guardadas en el diccionario son: ");
+				inOrder = dictionary.inOrder().split(",");
+				for(int i = 1; i < inOrder.length; i++)
+					System.out.println(inOrder[i]);
+			break;
+			}
 
 	}
+	 public static boolean MenuInvalido(String me) {
+		 boolean incorrecto = false;
+		 if (!me.equals("1") && !me.equals("2")) 
+			 incorrecto = true;
+		else 
+			incorrecto = false;
+		 
+		 return incorrecto;
+	 }
 
 }
